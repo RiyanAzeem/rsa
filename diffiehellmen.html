@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffie-Hellman Key Exchange</title>
+</head>
+<body>
+    <h2>Diffie-Hellman Key Exchange</h2>
+    <label for="prime">Prime Number (p):</label>
+    <input type="number" id="prime">
+    <br>
+    <label for="base">Base (g):</label>
+    <input type="number" id="base">
+    <br>
+    <label for="privateA">Alice's Private Key (a):</label>
+    <input type="number" id="privateA">
+    <br>
+    <label for="privateB">Bob's Private Key (b):</label>
+    <input type="number" id="privateB">
+    <br>
+    <button onclick="calculateSharedSecret()">Calculate Shared Secret</button>
+    <br>
+    <label for="sharedSecret">Shared Secret:</label>
+    <input type="text" id="sharedSecret" readonly>
+    <script>
+        function calculateSharedSecret() {
+            const [p, g, a, b] = ['prime', 'base', 'privateA', 'privateB'].map(id => parseInt(document.getElementById(id).value));
+            const publicKeyA = modPow(g, a, p);
+            const publicKeyB = modPow(g, b, p);
+            const sharedSecretA = modPow(publicKeyB, a, p);
+            const sharedSecretB = modPow(publicKeyA, b, p);
+            document.getElementById("sharedSecret").value = sharedSecretA === sharedSecretB ? sharedSecretA : "Error: Shared secrets don't match!";
+        }
+        function modPow(base, exponent, modulus) {
+            let result = 1;
+            for (let i = 0; i < exponent; i++) {
+
+                result = (result * base) % modulus;
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
