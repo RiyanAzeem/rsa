@@ -1,0 +1,57 @@
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;RSA Encryption/Decryption&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;RSA Encryption/Decryption&lt;/h2&gt;
+    &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt;
+    &lt;input type=&quot;text&quot; id=&quot;message&quot;&gt;
+    &lt;button onclick=&quot;encrypt()&quot;&gt;Encrypt&lt;/button&gt;
+    &lt;br&gt;
+    &lt;label for=&quot;encrypted&quot;&gt;Encrypted Message:&lt;/label&gt;
+    &lt;input type=&quot;text&quot; id=&quot;encrypted&quot; readonly&gt;
+    &lt;button onclick=&quot;decrypt()&quot;&gt;Decrypt&lt;/button&gt;
+    &lt;br&gt;
+    &lt;label for=&quot;decrypted&quot;&gt;Decrypted Message:&lt;/label&gt;
+    &lt;input type=&quot;text&quot; id=&quot;decrypted&quot; readonly&gt;
+    &lt;script&gt;
+        const [p, q, e, d] = [17, 19, 7, 23]; // Sample RSA parameters (not secure for real-
+world use)
+        function encrypt() {
+            const message = document.getElementById(&quot;message&quot;).value;
+            document.getElementById(&quot;encrypted&quot;).value = rsaEncrypt(message);
+        }
+        function decrypt() {
+            const encryptedMessage = document.getElementById(&quot;encrypted&quot;).value;
+            document.getElementById(&quot;decrypted&quot;).value = rsaDecrypt(encryptedMessage);
+        }
+        function rsaEncrypt(message) {
+            const m = BigInt(message.charCodeAt(0)); // For simplicity, only encrypting the
+first character
+            const n = BigInt(p * q);
+            return modPow(m, BigInt(e), n).toString();
+
+        }
+        function rsaDecrypt(encryptedMessage) {
+            const c = BigInt(encryptedMessage);
+            const n = BigInt(p * q);
+            return String.fromCharCode(Number(modPow(c, BigInt(d), n)));
+        }
+        function modPow(base, exponent, modulus) {
+            let result = 1n;
+            base %= modulus;
+            while (exponent &gt; 0n) {
+                if (exponent % 2n === 1n) {
+                    result = (result * base) % modulus;
+                }
+                exponent /= 2n;
+                base = (base * base) % modulus;
+            }
+            return result;
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
